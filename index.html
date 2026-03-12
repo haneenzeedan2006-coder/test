@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Web Animation Power Demo</title>
+
+<style>
+
+body{
+margin:0;
+overflow:hidden;
+background:#0f0f0f;
+font-family:Arial;
+}
+
+canvas{
+position:absolute;
+top:0;
+left:0;
+}
+
+.title{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+color:white;
+text-align:center;
+}
+
+h1{
+font-size:60px;
+letter-spacing:5px;
+opacity:0;
+animation:fadeIn 2s forwards;
+}
+
+p{
+opacity:0;
+animation:fadeIn 2s 2s forwards;
+font-size:20px;
+color:#aaa;
+}
+
+@keyframes fadeIn{
+to{
+opacity:1;
+transform:translate(-50%,-50%) scale(1);
+}
+}
+
+</style>
+</head>
+
+<body>
+
+<canvas id="canvas"></canvas>
+
+<div class="title">
+<h1>MARKETING IDEAS</h1>
+<p>visualized with web motion</p>
+</div>
+
+<script>
+
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+class Particle{
+constructor(){
+this.x = Math.random()*canvas.width;
+this.y = Math.random()*canvas.height;
+this.vx = (Math.random()-0.5)*1.5;
+this.vy = (Math.random()-0.5)*1.5;
+this.size = 2 + Math.random()*2;
+}
+
+move(){
+this.x += this.vx;
+this.y += this.vy;
+
+if(this.x<0||this.x>canvas.width) this.vx*=-1;
+if(this.y<0||this.y>canvas.height) this.vy*=-1;
+}
+
+draw(){
+ctx.beginPath();
+ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+ctx.fillStyle="white";
+ctx.fill();
+}
+}
+
+for(let i=0;i<120;i++){
+particles.push(new Particle());
+}
+
+function connect(){
+
+for(let a=0;a<particles.length;a++){
+
+for(let b=a;b<particles.length;b++){
+
+let dx = particles[a].x - particles[b].x;
+let dy = particles[a].y - particles[b].y;
+
+let distance = Math.sqrt(dx*dx + dy*dy);
+
+if(distance < 120){
+
+ctx.strokeStyle="rgba(255,255,255,"+(1-distance/120)+")";
+ctx.lineWidth=1;
+
+ctx.beginPath();
+ctx.moveTo(particles[a].x,particles[a].y);
+ctx.lineTo(particles[b].x,particles[b].y);
+ctx.stroke();
+
+}
+
+}
+
+}
+
+}
+
+function animate(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+particles.forEach(p=>{
+p.move();
+p.draw();
+});
+
+connect();
+
+requestAnimationFrame(animate);
+
+}
+
+animate();
+
+</script>
+
+</body>
+</html>
