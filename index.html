@@ -1,1 +1,970 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5 استراتيجيات تحول عملك</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+  :root {
+    --black: #050505;
+    --white: #f5f0e8;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --red: #c0392b;
+    --gray: #1a1a1a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Cairo', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    width: 40px; height: 40px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.15s ease;
+    mix-blend-mode: difference;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.6;
+  }
+
+  /* SECTIONS */
+  section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ===================== SECTION 1 - INTRO ===================== */
+  #intro {
+    background: var(--black);
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .intro-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 50%, #1a1200 0%, #050505 70%);
+  }
+
+  .intro-lines {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .intro-lines span {
+    position: absolute;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+    opacity: 0;
+    animation: lineFall 3s ease-in-out infinite;
+  }
+
+  @keyframes lineFall {
+    0% { top: -100%; opacity: 0; }
+    10% { opacity: 0.4; }
+    90% { opacity: 0.4; }
+    100% { top: 100%; opacity: 0; }
+  }
+
+  .intro-content { position: relative; z-index: 2; padding: 2rem; }
+
+  .intro-eyebrow {
+    font-size: clamp(0.7rem, 2vw, 0.9rem);
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 1s 0.3s forwards;
+  }
+
+  .intro-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 15vw, 14rem);
+    line-height: 0.85;
+    color: var(--white);
+    opacity: 0;
+    animation: fadeUp 1s 0.6s forwards;
+    position: relative;
+  }
+
+  .intro-title .gold { color: var(--gold); }
+
+  .intro-title::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(201,168,76,0.2);
+    transform: translate(4px, 4px);
+    z-index: -1;
+  }
+
+  .intro-subtitle {
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    font-weight: 300;
+    color: rgba(245,240,232,0.6);
+    margin-top: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 1s 0.9s forwards;
+    max-width: 600px;
+    line-height: 1.8;
+  }
+
+  .intro-cta {
+    margin-top: 3rem;
+    display: inline-block;
+    padding: 1rem 3rem;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.3em;
+    text-decoration: none;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 1s 1.2s forwards;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.3s;
+  }
+
+  .intro-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gold);
+    transform: translateX(-101%);
+    transition: transform 0.4s cubic-bezier(0.77,0,0.18,1);
+  }
+
+  .intro-cta:hover::before { transform: translateX(0); }
+  .intro-cta:hover { color: var(--black); }
+  .intro-cta span { position: relative; z-index: 1; }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    animation: fadeUp 1s 1.8s forwards;
+  }
+
+  .scroll-hint span {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 1; transform: scaleY(1); }
+    50% { opacity: 0.3; transform: scaleY(0.5); }
+  }
+
+  /* ===================== SECTION 2 - STAT ===================== */
+  #stat {
+    background: var(--white);
+    color: var(--black);
+    overflow: hidden;
+  }
+
+  .stat-bg {
+    position: absolute;
+    inset: 0;
+    background: var(--white);
+  }
+
+  .stat-ticker {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+  }
+
+  .stat-ticker-inner {
+    display: inline-block;
+    animation: ticker 20s linear infinite;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.2em;
+    color: rgba(0,0,0,0.2);
+  }
+
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .stat-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .stat-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(8rem, 25vw, 22rem);
+    line-height: 1;
+    color: var(--black);
+    position: relative;
+    display: inline-block;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .stat-number.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .stat-number::before {
+    content: '';
+    position: absolute;
+    bottom: -10px; left: 0; right: 0;
+    height: 6px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 1s 0.5s cubic-bezier(0.77,0,0.18,1);
+  }
+
+  .stat-number.visible::before { transform: scaleX(1); transform-origin: left; }
+
+  .stat-label {
+    font-size: clamp(1.2rem, 4vw, 2rem);
+    font-weight: 300;
+    color: rgba(0,0,0,0.7);
+    margin-top: 1rem;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s 0.8s;
+  }
+
+  .stat-label.visible { opacity: 1; transform: translateY(0); }
+
+  /* ===================== SECTIONS 3-7 - STRATEGIES ===================== */
+  .strategy {
+    background: var(--black);
+    flex-direction: column;
+    padding: 4rem 2rem;
+  }
+
+  .strategy:nth-child(even) { background: #0a0a0a; }
+
+  .strategy-inner {
+    max-width: 900px;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+  }
+
+  .strategy-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(8rem, 20vw, 18rem);
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(201,168,76,0.15);
+    position: absolute;
+    top: -4rem;
+    right: -2rem;
+    z-index: -1;
+    opacity: 0;
+    transform: translateX(50px);
+    transition: all 1s;
+    user-select: none;
+  }
+
+  .strategy-number.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .strategy-tag {
+    display: inline-block;
+    padding: 0.3rem 1rem;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.6s;
+  }
+
+  .strategy-tag.visible { opacity: 1; transform: translateX(0); }
+
+  .strategy-headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 10vw, 8rem);
+    line-height: 0.9;
+    color: var(--white);
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s 0.2s;
+  }
+
+  .strategy-headline.visible { opacity: 1; transform: translateY(0); }
+  .strategy-headline .accent { color: var(--gold); }
+
+  .strategy-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .strategy-line {
+    padding: 1.5rem;
+    border: 1px solid rgba(201,168,76,0.1);
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s;
+  }
+
+  .strategy-line:nth-child(1) { transition-delay: 0.3s; }
+  .strategy-line:nth-child(2) { transition-delay: 0.5s; }
+  .strategy-line:nth-child(3) { transition-delay: 0.7s; grid-column: 1/-1; }
+
+  .strategy-line.visible { opacity: 1; transform: translateY(0); }
+
+  .strategy-line::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 0;
+    background: var(--gold);
+    transition: height 0.6s 0.8s;
+  }
+
+  .strategy-line.visible::before { height: 100%; }
+
+  .strategy-line .label {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .strategy-line .text {
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    line-height: 1.8;
+    color: rgba(245,240,232,0.75);
+    font-weight: 300;
+  }
+
+  .strategy-line .text strong {
+    color: var(--white);
+    font-weight: 700;
+  }
+
+  /* ===================== SECTION - DIVIDER ===================== */
+  .divider-section {
+    min-height: 40vh;
+    background: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .divider-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 10vw, 9rem);
+    color: var(--black);
+    white-space: nowrap;
+    animation: marquee 10s linear infinite;
+    display: block;
+    position: absolute;
+  }
+
+  @keyframes marquee {
+    0% { transform: translateX(100vw); }
+    100% { transform: translateX(-100%); }
+  }
+
+  /* ===================== SECTION FINAL - OUTRO ===================== */
+  #outro {
+    background: var(--black);
+    flex-direction: column;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .outro-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridMove 8s linear infinite;
+  }
+
+  @keyframes gridMove {
+    0% { transform: translate(0,0); }
+    100% { transform: translate(60px, 60px); }
+  }
+
+  .outro-content {
+    position: relative;
+    z-index: 2;
+    padding: 2rem;
+  }
+
+  .outro-pre {
+    font-size: 0.75rem;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    opacity: 0;
+    transition: all 0.8s;
+  }
+
+  .outro-pre.visible { opacity: 1; }
+
+  .outro-big {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 18vw, 16rem);
+    line-height: 0.85;
+    opacity: 0;
+    transform: scale(1.2);
+    transition: all 1s 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .outro-big.visible { opacity: 1; transform: scale(1); }
+
+  .outro-big .line1 { color: var(--white); display: block; }
+  .outro-big .line2 { color: var(--gold); display: block; }
+  .outro-big .line3 {
+    color: transparent;
+    -webkit-text-stroke: 2px var(--white);
+    display: block;
+  }
+
+  .outro-caption {
+    font-size: clamp(0.9rem, 2.5vw, 1.3rem);
+    font-weight: 300;
+    color: rgba(245,240,232,0.5);
+    margin-top: 3rem;
+    line-height: 2;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s 0.8s;
+    max-width: 500px;
+    margin-inline: auto;
+  }
+
+  .outro-caption.visible { opacity: 1; transform: translateY(0); }
+
+  /* PARTICLES */
+  .particle {
+    position: absolute;
+    width: 3px; height: 3px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: particleDrift linear infinite;
+    opacity: 0.4;
+  }
+
+  @keyframes particleDrift {
+    0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+    10% { opacity: 0.4; }
+    90% { opacity: 0.4; }
+    100% { transform: translateY(-100px) translateX(var(--drift)); opacity: 0; }
+  }
+
+  /* UTILS */
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* GLITCH EFFECT */
+  .glitch {
+    position: relative;
+  }
+
+  .glitch::before, .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    background: transparent;
+  }
+
+  .glitch::before {
+    color: var(--red);
+    animation: glitch1 4s steps(1) infinite;
+    clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%);
+  }
+
+  .glitch::after {
+    color: #00ffff;
+    animation: glitch2 4s steps(1) infinite;
+    clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%);
+  }
+
+  @keyframes glitch1 {
+    0%, 90%, 100% { transform: translate(0); opacity: 0; }
+    92% { transform: translate(-3px, 1px); opacity: 0.8; }
+    94% { transform: translate(3px, -1px); opacity: 0.8; }
+    96% { transform: translate(0); opacity: 0; }
+  }
+
+  @keyframes glitch2 {
+    0%, 88%, 100% { transform: translate(0); opacity: 0; }
+    90% { transform: translate(3px, 2px); opacity: 0.8; }
+    92% { transform: translate(-3px, -2px); opacity: 0.8; }
+    94% { transform: translate(0); opacity: 0; }
+  }
+
+  /* HORIZONTAL SCROLLING CARDS */
+  .cards-section {
+    min-height: 100vh;
+    background: #080808;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .cards-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+    opacity: 0;
+    transition: opacity 0.8s;
+  }
+
+  .cards-label.visible { opacity: 1; }
+
+  .cards-track {
+    display: flex;
+    gap: 1.5rem;
+    animation: slideCards 18s linear infinite;
+    padding: 1rem 0;
+  }
+
+  @keyframes slideCards {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .card {
+    min-width: 280px;
+    height: 180px;
+    border: 1px solid rgba(201,168,76,0.2);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: rgba(201,168,76,0.02);
+    transition: border-color 0.3s;
+  }
+
+  .card:hover { border-color: var(--gold); }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.05), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .card:hover::before { opacity: 1; }
+
+  .card-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: rgba(201,168,76,0.2);
+    line-height: 1;
+  }
+
+  .card-text {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: rgba(245,240,232,0.7);
+    font-weight: 300;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ======================== SECTION 1: INTRO ======================== -->
+<section id="intro">
+  <div class="intro-bg"></div>
+  <div class="intro-lines" id="introLines"></div>
+
+  <div class="intro-content">
+    <p class="intro-eyebrow">دليل الديزاينر الخارق</p>
+    <h1 class="intro-title glitch" data-text="5">
+      <span class="gold">5</span>
+    </h1>
+    <h2 style="font-family:'Bebas Neue',sans-serif; font-size:clamp(2rem,8vw,6rem); opacity:0; animation:fadeUp 1s 0.75s forwards; line-height:1; color:var(--white);">
+      استراتيجيات
+    </h2>
+    <p class="intro-subtitle">
+      من مصمم عادي يتنافس على السعر<br>
+      إلى مصمم خارق يُحدد شروطه
+    </p>
+    <a href="#stat" class="intro-cta"><span>ابدأ الرحلة</span></a>
+  </div>
+
+  <div class="scroll-hint">
+    <span>اسحب للأسفل</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ======================== SECTION 2: STAT ======================== -->
+<section id="stat">
+  <div class="stat-bg"></div>
+  <div class="stat-ticker">
+    <div class="stat-ticker-inner">
+      GRAPHIC DESIGN · FREELANCE · STRATEGY · VALUE · POSITIONING · BRANDING · RESULTS · GROWTH · IMPACT · GRAPHIC DESIGN · FREELANCE · STRATEGY · VALUE · POSITIONING · BRANDING · RESULTS · GROWTH · IMPACT ·&nbsp;
+    </div>
+  </div>
+  <div class="stat-content">
+    <div class="stat-number" id="statNum">90%</div>
+    <p class="stat-label" id="statLabel">
+      من الديزاينرز يتنافسون على السعر<br>
+      <strong style="color:var(--black)">أنت لن تكون منهم</strong>
+    </p>
+  </div>
+</section>
+
+<!-- ======================== SECTION 3: S1 ======================== -->
+<section class="strategy" id="s1">
+  <div class="strategy-inner">
+    <div class="strategy-number" id="sn1">١</div>
+    <div class="strategy-tag" id="st1">الاستراتيجية الأولى</div>
+    <h2 class="strategy-headline" id="sh1">
+      بع<br><span class="accent">النتيجة</span><br>مش التصميم
+    </h2>
+    <div class="strategy-body">
+      <div class="strategy-line" id="sl1a">
+        <span class="label">المشكلة</span>
+        <p class="text">العميل لا يريد <strong>"لوغو جميل"</strong> — يريد أن يبدو محترفاً أمام عملائه</p>
+      </div>
+      <div class="strategy-line" id="sl1b">
+        <span class="label">الحل</span>
+        <p class="text">غيّر كلامك من <strong>"أصمم لك"</strong> إلى <strong>"أحقق لك"</strong></p>
+      </div>
+      <div class="strategy-line" id="sl1c">
+        <span class="label">النتيجة</span>
+        <p class="text">حين تبيع النتيجة، يتغير سعرك تلقائياً — لأن العميل يقارن بالقيمة لا بالمنافس</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== DIVIDER ======================== -->
+<div class="divider-section">
+  <span class="divider-text">التخصص · القيمة · النتيجة · الاحتراف · التميز · التخصص · القيمة · النتيجة · الاحتراف · التميز ·</span>
+</div>
+
+<!-- ======================== SECTION 4: S2 ======================== -->
+<section class="strategy" id="s2">
+  <div class="strategy-inner">
+    <div class="strategy-number" id="sn2">٢</div>
+    <div class="strategy-tag" id="st2">الاستراتيجية الثانية</div>
+    <h2 class="strategy-headline" id="sh2">
+      التخصص<br><span class="accent">= سلطة</span>
+    </h2>
+    <div class="strategy-body">
+      <div class="strategy-line" id="sl2a">
+        <span class="label">الواقع</span>
+        <p class="text">ديزاينر عام = <strong>خيار من بين مئة</strong></p>
+      </div>
+      <div class="strategy-line" id="sl2b">
+        <span class="label">الفرصة</span>
+        <p class="text">متخصص بالمطاعم أو العيادات = <strong>الخيار الأول دائماً</strong></p>
+      </div>
+      <div class="strategy-line" id="sl2c">
+        <span class="label">القاعدة</span>
+        <p class="text">كلما ضيّقت تخصصك، اتسع سوقك الحقيقي — لأنك تصبح الخبير لا المنفذ</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== SECTION 5: S3 ======================== -->
+<section class="strategy" id="s3">
+  <div class="strategy-inner">
+    <div class="strategy-number" id="sn3">٣</div>
+    <div class="strategy-tag" id="st3">الاستراتيجية الثالثة</div>
+    <h2 class="strategy-headline" id="sh3">
+      اعرض<br>عملك في<br><span class="accent">سياق</span>
+    </h2>
+    <div class="strategy-body">
+      <div class="strategy-line" id="sl3a">
+        <span class="label">الخطأ الشائع</span>
+        <p class="text">عرض التصميم على <strong>خلفية بيضاء فارغة</strong></p>
+      </div>
+      <div class="strategy-line" id="sl3b">
+        <span class="label">الطريقة الصحيحة</span>
+        <p class="text">موكاب حقيقي · جدار · هاتف · سياق حياتي</p>
+      </div>
+      <div class="strategy-line" id="sl3c">
+        <span class="label">الفرق</span>
+        <p class="text">السياق يحرك المشاعر. والمشاعر تحرك القرارات. الفرق بين <strong>"كويس"</strong> و<strong>"واو"</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== CARDS INTERLUDE ======================== -->
+<div class="cards-section" id="cardsSection">
+  <p class="cards-label" id="cardsLabel">ماذا يفعل الخارقون</p>
+  <div class="cards-track" id="cardsTrack"></div>
+</div>
+
+<!-- ======================== SECTION 6: S4 ======================== -->
+<section class="strategy" id="s4">
+  <div class="strategy-inner">
+    <div class="strategy-number" id="sn4">٤</div>
+    <div class="strategy-tag" id="st4">الاستراتيجية الرابعة</div>
+    <h2 class="strategy-headline" id="sh4">
+      السعر الثابت<br><span class="accent">يقتل</span><br>دخلك
+    </h2>
+    <div class="strategy-body">
+      <div class="strategy-line" id="sl4a">
+        <span class="label">المنطق</span>
+        <p class="text">المشروع نفسه بـ <strong>500</strong> يمكن أن يصبح <strong>2000</strong></p>
+      </div>
+      <div class="strategy-line" id="sl4b">
+        <span class="label">الطريقة</span>
+        <p class="text">اسأل: <strong>ماذا سيكسب العميل منك؟</strong> ثم سعّر بنسبة من الكسب</p>
+      </div>
+      <div class="strategy-line" id="sl4c">
+        <span class="label">التحول</span>
+        <p class="text">من "كم ساعة عملت" إلى "كم قيمة ما أنتجت" — هذا هو تسعير القيمة</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== SECTION 7: S5 ======================== -->
+<section class="strategy" id="s5">
+  <div class="strategy-inner">
+    <div class="strategy-number" id="sn5">٥</div>
+    <div class="strategy-tag" id="st5">الاستراتيجية الخامسة</div>
+    <h2 class="strategy-headline" id="sh5">
+      العميل القديم<br>= دخل<br><span class="accent">جديد</span>
+    </h2>
+    <div class="strategy-body">
+      <div class="strategy-line" id="sl5a">
+        <span class="label">الحقيقة</span>
+        <p class="text"><strong>90%</strong> من الديزاينرز ينسون عملاءهم بعد التسليم</p>
+      </div>
+      <div class="strategy-line" id="sl5b">
+        <span class="label">الفرصة</span>
+        <p class="text">تواصل · اسأل · اقترح · ذكّرهم بوجودك</p>
+      </div>
+      <div class="strategy-line" id="sl5c">
+        <span class="label">السبب</span>
+        <p class="text">العميل الراضي <strong>أسهل وأرخص</strong> من جلب عميل جديد — بكل المقاييس</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== OUTRO ======================== -->
+<section id="outro">
+  <div class="outro-grid"></div>
+  <div id="particles"></div>
+  <div class="outro-content">
+    <p class="outro-pre" id="outroEye">الفرق ليس الموهبة</p>
+    <div class="outro-big" id="outroBig">
+      <span class="line1">الفرق</span>
+      <span class="line2">هو</span>
+      <span class="line3">القرار</span>
+    </div>
+    <p class="outro-caption" id="outroCaption">
+      خمس استراتيجيات.<br>
+      قرار واحد.<br>
+      أنت تختار من تكون.
+    </p>
+  </div>
+</section>
+
+<script>
+  // CURSOR
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 6 + 'px';
+    cursor.style.top = my - 6 + 'px';
+  });
+
+  function animateRing() {
+    rx += (mx - rx - 20) * 0.12;
+    ry += (my - ry - 20) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  // INTRO LINES
+  const linesContainer = document.getElementById('introLines');
+  for (let i = 0; i < 12; i++) {
+    const l = document.createElement('span');
+    l.style.left = (Math.random() * 100) + '%';
+    l.style.height = (Math.random() * 40 + 20) + '%';
+    l.style.animationDelay = (Math.random() * 4) + 's';
+    l.style.animationDuration = (Math.random() * 3 + 2) + 's';
+    linesContainer.appendChild(l);
+  }
+
+  // PARTICLES in outro
+  const particleContainer = document.getElementById('particles');
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('div');
+    p.classList.add('particle');
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (Math.random() * 10 + 8) + 's';
+    p.style.animationDelay = (Math.random() * 8) + 's';
+    p.style.setProperty('--drift', (Math.random() * 100 - 50) + 'px');
+    p.style.width = p.style.height = (Math.random() * 3 + 1) + 'px';
+    particleContainer.appendChild(p);
+  }
+
+  // CARDS
+  const cardData = [
+    { num: '01', text: 'يبيعون النتيجة لا الخدمة' },
+    { num: '02', text: 'يتخصصون في نيش محدد' },
+    { num: '03', text: 'يعرضون عملهم بسياق حقيقي' },
+    { num: '04', text: 'يسعّرون بالقيمة لا بالساعة' },
+    { num: '05', text: 'يبنون علاقة مع كل عميل' },
+    { num: '06', text: 'يرفعون سعرهم باستمرار' },
+    { num: '07', text: 'يختارون عملاءهم بعناية' },
+    { num: '08', text: 'لديهم معيار واضح للعمل' },
+  ];
+
+  const track = document.getElementById('cardsTrack');
+  [...cardData, ...cardData].forEach(c => {
+    const el = document.createElement('div');
+    el.classList.add('card');
+    el.innerHTML = `<div class="card-num">${c.num}</div><p class="card-text">${c.text}</p>`;
+    track.appendChild(el);
+  });
+
+  // INTERSECTION OBSERVER
+  const animTargets = [
+    ['statNum', 'visible'], ['statLabel', 'visible'],
+    ['sn1','visible'],['st1','visible'],['sh1','visible'],['sl1a','visible'],['sl1b','visible'],['sl1c','visible'],
+    ['sn2','visible'],['st2','visible'],['sh2','visible'],['sl2a','visible'],['sl2b','visible'],['sl2c','visible'],
+    ['sn3','visible'],['st3','visible'],['sh3','visible'],['sl3a','visible'],['sl3b','visible'],['sl3c','visible'],
+    ['sn4','visible'],['st4','visible'],['sh4','visible'],['sl4a','visible'],['sl4b','visible'],['sl4c','visible'],
+    ['sn5','visible'],['st5','visible'],['sh5','visible'],['sl5a','visible'],['sl5b','visible'],['sl5c','visible'],
+    ['cardsLabel','visible'],
+    ['outroEye','visible'],['outroBig','visible'],['outroCaption','visible'],
+  ];
+
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.2 });
+
+  animTargets.forEach(([id]) => {
+    const el = document.getElementById(id);
+    if (el) obs.observe(el);
+  });
+
+  // STRATEGY LINES observe
+  document.querySelectorAll('.strategy-line').forEach(el => obs.observe(el));
+
+  // GLITCH hover on intro title
+  const glitchEl = document.querySelector('.glitch');
+  if (glitchEl) {
+    setInterval(() => {
+      glitchEl.style.transform = `translate(${(Math.random()-0.5)*2}px, ${(Math.random()-0.5)*2}px)`;
+      setTimeout(() => glitchEl.style.transform = '', 80);
+    }, 3000);
+  }
+</script>
+</body>
+</html>
