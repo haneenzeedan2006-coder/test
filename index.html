@@ -2,51 +2,63 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Web Animation Power Demo</title>
+<title>Marketing Funnel Animation</title>
 
 <style>
-
 body{
 margin:0;
-overflow:hidden;
-background:#0f0f0f;
+background:#0e0e11;
 font-family:Arial;
+color:white;
+overflow:hidden;
 }
 
-canvas{
-position:absolute;
-top:0;
-left:0;
-}
-
-.title{
+.container{
 position:absolute;
 top:50%;
 left:50%;
 transform:translate(-50%,-50%);
-color:white;
+width:500px;
+}
+
+.stage{
+position:relative;
+margin:auto;
 text-align:center;
-}
-
-h1{
-font-size:60px;
-letter-spacing:5px;
+padding:18px;
+margin-top:6px;
+font-weight:bold;
 opacity:0;
-animation:fadeIn 2s forwards;
+transform:translateY(-40px) scale(.9);
+transition:all .8s;
 }
 
-p{
-opacity:0;
-animation:fadeIn 2s 2s forwards;
-font-size:20px;
-color:#aaa;
-}
-
-@keyframes fadeIn{
-to{
+.stage.active{
 opacity:1;
-transform:translate(-50%,-50%) scale(1);
+transform:translateY(0) scale(1);
+box-shadow:0 0 25px rgba(255,255,255,.3);
 }
+
+.tofu{width:420px;background:#ff5c5c;}
+.mofu{width:320px;background:#ff9f43;}
+.bofu{width:230px;background:#1dd1a1;}
+.buy{width:160px;background:#54a0ff;}
+.loyal{width:120px;background:#8e44ad;}
+
+.text{
+position:absolute;
+bottom:40px;
+left:50%;
+transform:translateX(-50%);
+width:70%;
+text-align:center;
+font-size:22px;
+opacity:0;
+transition:opacity 1s;
+}
+
+.text.show{
+opacity:1;
 }
 
 </style>
@@ -54,93 +66,51 @@ transform:translate(-50%,-50%) scale(1);
 
 <body>
 
-<canvas id="canvas"></canvas>
+<div class="container">
 
-<div class="title">
-<h1>MARKETING IDEAS</h1>
-<p>visualized with web motion</p>
+<div class="stage tofu">TOFU – Awareness</div>
+<div class="stage mofu">MOFU – Consideration</div>
+<div class="stage bofu">BOFU – Conversion</div>
+<div class="stage buy">Purchase</div>
+<div class="stage loyal">Retention</div>
+
 </div>
+
+<div class="text" id="desc"></div>
 
 <script>
 
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const stages=document.querySelectorAll(".stage");
+const text=document.getElementById("desc");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+const content=[
+"مرحلة الوعي: جذب انتباه الغرباء بمحتوى مفيد.",
+"مرحلة الاهتمام: العميل يقارن ويبحث عن الحل.",
+"مرحلة القرار: عرض لا يمكن رفضه.",
+"إتمام الشراء: العميل يتحول لمشتري.",
+"الولاء: العميل السعيد يعود ويشتري مرة أخرى."
+];
 
-let particles = [];
-
-class Particle{
-constructor(){
-this.x = Math.random()*canvas.width;
-this.y = Math.random()*canvas.height;
-this.vx = (Math.random()-0.5)*1.5;
-this.vy = (Math.random()-0.5)*1.5;
-this.size = 2 + Math.random()*2;
-}
-
-move(){
-this.x += this.vx;
-this.y += this.vy;
-
-if(this.x<0||this.x>canvas.width) this.vx*=-1;
-if(this.y<0||this.y>canvas.height) this.vy*=-1;
-}
-
-draw(){
-ctx.beginPath();
-ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
-ctx.fillStyle="white";
-ctx.fill();
-}
-}
-
-for(let i=0;i<120;i++){
-particles.push(new Particle());
-}
-
-function connect(){
-
-for(let a=0;a<particles.length;a++){
-
-for(let b=a;b<particles.length;b++){
-
-let dx = particles[a].x - particles[b].x;
-let dy = particles[a].y - particles[b].y;
-
-let distance = Math.sqrt(dx*dx + dy*dy);
-
-if(distance < 120){
-
-ctx.strokeStyle="rgba(255,255,255,"+(1-distance/120)+")";
-ctx.lineWidth=1;
-
-ctx.beginPath();
-ctx.moveTo(particles[a].x,particles[a].y);
-ctx.lineTo(particles[b].x,particles[b].y);
-ctx.stroke();
-
-}
-
-}
-
-}
-
-}
+let i=0;
 
 function animate(){
 
-ctx.clearRect(0,0,canvas.width,canvas.height);
+if(i<stages.length){
 
-particles.forEach(p=>{
-p.move();
-p.draw();
-});
+stages[i].classList.add("active");
 
-connect();
+text.classList.remove("show");
 
-requestAnimationFrame(animate);
+setTimeout(()=>{
+text.innerText=content[i];
+text.classList.add("show");
+},400);
+
+i++;
+
+setTimeout(animate,2500);
+
+}
 
 }
 
