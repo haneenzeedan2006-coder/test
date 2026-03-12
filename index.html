@@ -2,39 +2,122 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Marketing Funnel Animation</title>
-
+<title>Ultimate Marketing Funnel Demo</title>
 <style>
-body{
-margin:0;
-background:#0e0e11;
-font-family:Arial;
-color:white;
-overflow:hidden;
+body{margin:0;overflow:hidden;background:#050505;font-family:Arial;}
+canvas{position:fixed;top:0;left:0;z-index:-2;}
+h1,h2{position:absolute;width:100%;text-align:center;color:white;text-shadow:0 0 15px #ff5c5c;opacity:0;}
+h1{top:10%;font-size:60px;animation:fadeIn 2s forwards 0.5s;}
+h2{top:20%;font-size:40px;animation:fadeIn 2s forwards 1.5s;}
+@keyframes fadeIn{to{opacity:1;}}
+.funnel-container{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:15px;}
+.funnel-step{height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:bold;opacity:0;transform:translateY(-80px) scale(.8);transition:all .8s;box-shadow:0 0 20px rgba(255,255,255,.3);}
+.funnel-step.show{opacity:1;transform:translateY(0) scale(1);}
+.tofu{width:420px;background:#ff5c5c;}
+.mofu{width:320px;background:#ff9f43;}
+.bofu{width:240px;background:#1dd1a1;}
+.buy{width:160px;background:#54a0ff;}
+</style>
+</head>
+<body>
+
+<h1>Ultimate Marketing Funnel</h1>
+<h2>Turning strangers into loyal customers</h2>
+
+<div class="funnel-container">
+<div class="funnel-step tofu">Awareness</div>
+<div class="funnel-step mofu">Interest</div>
+<div class="funnel-step bofu">Decision</div>
+<div class="funnel-step buy">Purchase</div>
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+// background particles
+let bgParticles=[];
+for(let i=0;i<200;i++){
+bgParticles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:1+Math.random()*3,vx:(Math.random()-0.5)*0.7,vy:(Math.random()-0.5)*0.7});
 }
 
-.container{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-width:500px;
+// client class
+class Client{
+constructor(){
+this.x=Math.random()*canvas.width*0.6+canvas.width*0.2;
+this.y=-10;
+this.vy=2+Math.random()*2;
+this.color=`hsl(${Math.random()*360},80%,60%)`;
+this.converted=false;
+}
+update(){
+this.y+=this.vy;
+if(this.y>canvas.height*0.6 && !this.converted){
+this.converted=true;
+explosions.push(new Explosion(this.x,this.y));
+texts.push(new FloatingText(this.x,this.y,"$"));
+}
+}
+draw(){
+ctx.beginPath();
+ctx.arc(this.x,this.y,5,0,Math.PI*2);
+ctx.fillStyle=this.color;
+ctx.shadowColor=this.color;
+ctx.shadowBlur=10;
+ctx.fill();
+}
 }
 
-.stage{
-position:relative;
-margin:auto;
-text-align:center;
-padding:18px;
-margin-top:6px;
-font-weight:bold;
-opacity:0;
-transform:translateY(-40px) scale(.9);
-transition:all .8s;
+// explosion effect
+class Explosion{
+constructor(x,y){
+this.x=x;this.y=y;this.particles=[];
+for(let i=0;i<25;i++){
+this.particles.push({x:this.x,y:this.y,vx:(Math.random()-0.5)*6,vy:(Math.random()-0.5)*6,r:2+Math.random()*3,color:`hsl(${Math.random()*360},80%,60%)`});
+}
+this.life=40;
+}
+update(){
+this.particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=0.1;});
+this.life--;
+}
+draw(){this.particles.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.color;ctx.fill();});}
 }
 
-.stage.active{
-opacity:1;
+class FloatingText{
+constructor(x,y,text){this.x=x;this.y=y;this.text=text;this.alpha=1;}
+update(){this.y-=1;this.alpha-=0.02;}
+draw(){ctx.font="24px Arial";ctx.fillStyle=`rgba(255,255,0,${this.alpha})`;ctx.fillText(this.text,this.x,this.y);}
+}
+
+let clients=[];for(let i=0;i<50;i++)clients.push(new Client());
+let explosions=[];let texts=[];
+
+// funnel animation on scroll
+const steps=document.querySelectorAll(".funnel-step");
+function reveal(){steps.forEach((step,i)=>{let rect=step.getBoundingClientRect();if(rect.top < window.innerHeight-100){setTimeout(()=>{step.classList.add("show");},i*300);}});}
+window.addEventListener("scroll",reveal);reveal();
+
+// animate
+function animate(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+// draw bg
+bgParticles.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,.2)`;ctx.fill();p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>canvas.width)p.vx*=-1;if(p.y<0||p.y>canvas.height)p.vy*=-1;});
+// clients
+clients.forEach(c=>{c.update();c.draw();});
+explosions.forEach((e,i)=>{e.update();e.draw();if(e.life<=0)explosions.splice(i,1);});
+texts.forEach((t,i)=>{t.update();t.draw();if(t.alpha<=0)texts.splice(i,1);});
+requestAnimationFrame(animate);
+}
+animate();
+
+</script>
+</body>
+</html>opacity:1;
 transform:translateY(0) scale(1);
 box-shadow:0 0 25px rgba(255,255,255,.3);
 }
